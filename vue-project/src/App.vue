@@ -52,9 +52,9 @@ header {
 
 
 <template>
-  <Header/>
+  <Header v-on:submit="filterPokemons" v-on:submit-id="getPokemonById" />
   Hello World
-  <PokemonList/>
+  <PokemonList ref="list"/>
 </template>
 
 <script>
@@ -116,6 +116,27 @@ header {
         type1: pokemon.types[0].type.name,
         type2: pokemonType2,
         url: "https://pokeapi.co/api/v2/pokemon/1/"
+      }
+    },
+    methods: {
+      filterPokemons(filterData) {
+        let pokemonList = this.$refs.list
+        if (pokemonList) {
+          pokemonList.updateFilterParameters(filterData)
+        }
+        else {
+          console.error('Child component reference is undefined.');
+        }
+      },
+
+      getPokemonById(searchId) {
+        let pokemonList = this.$refs.list
+        if (pokemonList) {
+          pokemonList.getPokemonById(searchId)
+        }
+        else {
+          console.error('Child component reference is undefined.');
+        }
       }
     }
   }
