@@ -49,6 +49,27 @@
             await this.retrievePokemonTypes()
             await this.retrievePokemonGenerations()
         },
+        mounted() {
+            if(localStorage.searchName) this.searchName = localStorage.searchName;
+            if(localStorage.searchType1) this.searchType1 = localStorage.searchType1;
+            if(localStorage.searchType2) this.searchType2 = localStorage.searchType2;
+            if(localStorage.searchGeneration) this.searchGeneration = localStorage.searchGeneration;
+            if(localStorage.sortParameter) this.sortParameter = localStorage.sortParameter;
+        },
+        watch:{
+            searchName(searchName) {
+                localStorage.searchName = searchName;
+            },
+            searchType1(searchType1) {
+                localStorage.searchType1 = searchType1;
+            },
+            searchType2(searchType2) {
+                localStorage.searchType2 = searchType2;
+            },
+            searchGeneration(searchGeneration) {
+                localStorage.searchGeneration = searchGeneration;
+            }
+        },
         computed: {
             typeList() {
                 if (!this.pokemonTypes) return []
@@ -117,11 +138,13 @@
 
             idSort() {
                 this.sortParameter = "idSort"
+                localStorage.sortParameter = "idSort";
                 this.submitSort()
             },
 
             nameSort() {
                 this.sortParameter = "nameSort"
+                localStorage.sortParameter = "nameSort";
                 this.submitSort()
             }
         },
