@@ -66,55 +66,11 @@ header {
 </template>
 
 <script>
-  import Pokemon from "./components/Pokemon.vue"
   import PokemonList from "./components/PokemonList.vue"
-
-  
-
-  async function getPokemonById(pokemonId) {
-        const response = await fetch("https://pokeapi.co/api/v2/pokemon/"+pokemonId)
-        if (response.status == 200) {
-            const data = await response.json()
-            return data
-        } else {
-            new Error(response.statusText)
-        }
-    }
-
-    async function getPokemonByUrl(pokemonUrl) {
-        const response = await fetch(pokemonUrl)
-        if (response.status == 200) {
-            const data = await response.json()
-            return data
-        } else {
-            new Error(response.statusText)
-        }
-    }
-
-    let pokemonId = Math.floor(Math.random() * 1302)
-    if (pokemonId > 1025) {
-      pokemonId += 8975
-    }
-
-    let pokemonUrl = "https://pokeapi.co/api/v2/pokemon/"+pokemonId+"/"
-
-    let pokemon = await getPokemonByUrl(pokemonUrl)
-
-    let pokemonType2
-    if (pokemon.types.length == 1) {
-      pokemonType2 = "None"
-    }
-    else {
-      pokemonType2 = pokemon.types[1].type.name
-    }
-    console.log(pokemonType2)
 
   export default {
     name: 'App',
-    components : { Pokemon, PokemonList },
-    created() {
-      console.log(20);
-    },
+    components : { PokemonList },
     data() {
       return {
         searchName: {type: String, default: ""},

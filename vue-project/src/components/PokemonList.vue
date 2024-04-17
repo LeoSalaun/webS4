@@ -23,7 +23,6 @@
 </template>
 
 <script>
-    //import PokemonHeader from "./components/PokemonHeader.vue"
     import PokemonCard from "./PokemonCard.vue"
     import Header from "./Header.vue"
 
@@ -31,17 +30,8 @@
         name: 'PokemonList',
         computed: {
             filteredData() {
-
-                // await this.updateGenerationFilter()
-                // let data = [2, 4, 5]
-                // const filterFunc = (item) => { return item < this.maxValue }
-                // data = data.filter(filterFunc)
-                // if (!this.pokemonList.results) return []
-                // return this.pokemonList.results.slice(0, 4)
                 if (!this.pokemonList) return []
-                const filterName = (item) => { 
-                    //console.log(item)
-                    //console.log(item.name.includes(this.searchName))
+                const filterName = (item) => {
                     return item.name.includes(this.searchName)
                 }
                 
@@ -49,22 +39,14 @@
                 if (this.searchName != "") {
                     data = data.filter(filterName)
                 }
-                //console.log(data)
-                // return data //.slice((this.page-1)*20,this.page*20)
+
                 return (this.sortData(data)).slice((this.page-1)*20,this.page*20)
-                // return this.sortData(data)
             }
         },
         data() {
             return {
                 pokemonList: [],
-                filterParameters: {
-                    // searchName: {type: String, default: "null"},
-                    // searchId: {type: Number, default: -1},
-                    // searchType1: {type: String, default: "null"},
-                    // searchType2: {type: String, default: "null"},
-                    // searchGeneration: {type: Number, default: -1}
-                },
+                filterParameters: {},
                 page: 1,
                 searchName: "",
                 searchType1: "unknown",
@@ -104,20 +86,12 @@
 
             async retrievePokemonListByGeneration() {
                 this.pokemonList = await this.getPokemonListByGeneration()
-                //else console.log(this.searchGeneration)
-                //console.log(this.pokemonList)
             },
 
             async updateGenerationFilter() {
                 if (this.searchGeneration != "none") await this.retrievePokemonListByGeneration()
                 else await this.retrievePokemonList()
             },
-
-            // updateFilterParameters(filterData) {
-            //     this.filterParameters = filterData
-            //     this.searchId = 0
-            //     console.log(this.filterParameters)
-            // },
 
             previousPage() { if (this.page > 1) this.page-- },
 
@@ -136,24 +110,7 @@
             getPokemonsByName(searchName) {
                 this.page = 1
                 this.searchName = searchName
-                // let pokemonList = this.$refs.list
-                // if (pokemonList) {
-                //   pokemonList.updateSearchName(searchName)
-                // }
-                // else {
-                //   console.error('Child component reference is undefined.');
-                // }
             },
-
-            // filterPokemons(filterData) {
-            //   let pokemonList = this.$refs.list
-            //   if (pokemonList) {
-            //     pokemonList.updateFilterParameters(filterData)
-            //   }
-            //   else {
-            //     console.error('Child component reference is undefined.');
-            //   }
-            // },
 
             getPokemonsByTypes(searchTypes) {
                 this.page = 1

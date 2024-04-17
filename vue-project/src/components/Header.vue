@@ -19,11 +19,6 @@
         <form action="get" id="sort">
             <button v-if="this.sortParameter == 'nameSort'" v-on:click="idSort">Sort by pokedex ID</button>
             <button v-if="this.sortParameter == 'idSort'" v-on:click="nameSort">Sort by pokemon name</button>
-            <!-- <input type="radio" id="idSort" name="sortParameter" value="idSort" v-model="this.sortParameter" v-on:input="submitSort" checked />
-            <label for="idSort">Sort by pokedex ID</label> <br/>
-
-            <input type="radio" id="nameSort" name="sortParameter" value="nameSort" v-model="this.sortParameter" v-on:input="submitSort"/>
-            <label for="nameSort">Sort by name</label> <br/> -->
         </form>
     </div>
 </template>
@@ -44,25 +39,16 @@
                 sortParameter: "idSort"
             }
         },
-        props: {
-            // searchName: "",
-            // searchType1: "unknown",
-            // searchType2: "unknown",
-            // searchGeneration: 0,
-            // sortParameter: "idSort"
-        },
         async created() {
             await this.retrievePokemonTypes()
             await this.retrievePokemonGenerations()
         },
         computed: {
             typeList() {
-                //console.log(this.pokemonTypes)
                 if (!this.pokemonTypes) return []
                 else return this.pokemonTypes
             },
             generationList() {
-                //console.log(this.pokemonGenerations)
                 if (!this.pokemonGenerations) return []
                 else return this.pokemonGenerations
             }
@@ -80,7 +66,6 @@
 
             async retrievePokemonTypes() {
                 this.pokemonTypes = await this.getPokemonTypes()
-                //console.log(this.pokemonTypes)
             },
             
             async getPokemonGenerations() {
@@ -95,7 +80,6 @@
 
             async retrievePokemonGenerations() {
                 this.pokemonGenerations = await this.getPokemonGenerations()
-                //console.log(this.pokemonTypes)
             },
 
             submitName() {
