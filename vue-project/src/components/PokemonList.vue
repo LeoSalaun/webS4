@@ -98,10 +98,16 @@
             nextPage() {  this.page++ },
 
             sortData(data) {
-                console.log(this.sortParameter)
                 if (this.sortParameter == "idSort") return data.sort((a,b) => {
-                    let idA = parseInt(a.url.substring(34, a.url.length-1))
-                    let idB = parseInt(b.url.substring(34, b.url.length-1))
+                    let idA, idB
+                    if (this.searchGeneration == 0) {
+                        idA = parseInt(a.url.substring(34, a.url.length-1))
+                        idB = parseInt(b.url.substring(34, b.url.length-1))
+                    }
+                    else {
+                        idA = parseInt(a.url.substring(42, a.url.length-1))
+                        idB = parseInt(b.url.substring(42, b.url.length-1))
+                    }
                     return idA - idB
                 })
                 else return data.sort((a,b) => a.name.localeCompare(b.name))

@@ -1,25 +1,31 @@
 <template>
     <div id="Header">
-        <form action="get" id="filters">
-            <label for="searchBar">Search by Pokemon name: </label> <input v-model="this.searchName" v-on:input="submitName"  type="text" name="searchBar" id="searchBar"/>
+        <div id="filterDiv">
+            <form action="get" id="filters">
+                <label for="searchBar">Search by Pokemon name: </label> <input v-model="this.searchName" v-on:input="submitName"  type="text" name="searchBar" id="searchBar"/>
 
-            <label for="generation">Generation:</label> <input v-if="this.pokemonGenerations" v-model="this.searchGeneration" v-on:input="submitGeneration" type="number" id="generation" name="generation" min="1" :max="this.pokemonGenerations.length" />
+                <label for="generation">Generation:</label> <input v-if="this.pokemonGenerations" v-model="this.searchGeneration" v-on:input="submitGeneration" type="number" id="generation" name="generation" min="1" :max="this.pokemonGenerations.length" />
 
-            <label for="type1">First type:</label> <select v-if="this.typeList" v-model="this.searchType1" name="type1" id="type1">
-                <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
-            </select>
+                <label for="type1">First type:</label> <select v-if="this.typeList" v-model="this.searchType1" name="type1" id="type1">
+                    <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
+                </select>
 
-            <label for="type2">Second type:</label> <select v-if="this.typeList" v-model="this.searchType2" name="type2" id="type2">
-                <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
-            </select>
+                <label for="type2">Second type:</label> <select v-if="this.typeList" v-model="this.searchType2" name="type2" id="type2">
+                    <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
+                </select>
+            </form> <br/>
 
             <button v-on:click="submitTypes">Get pokemons by types</button> 
-        </form> <br/>
+        </div>
 
-        <form action="get" id="sort">
-            <button v-if="this.sortParameter == 'nameSort'" v-on:click="idSort">Sort by pokedex ID</button>
-            <button v-if="this.sortParameter == 'idSort'" v-on:click="nameSort">Sort by pokemon name</button>
-        </form>
+        <div id="resetSort">
+            <button v-on:click="submitReset">Reset filters</button>
+
+            <form action="get" id="sort">
+                <button v-if="this.sortParameter == 'nameSort'" v-on:click="idSort">Sort by pokedex ID</button>
+                <button v-if="this.sortParameter == 'idSort'" v-on:click="nameSort">Sort by pokemon name</button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -95,6 +101,16 @@
                 else this.$emit('submit-generation', "none")
             },
 
+            submitReset() {
+                this.searchName = ""
+                this.searchType1 = "unknown"
+                this.searchType2 = "unknown"
+                this.searchGeneration = 0
+                this.submitName()
+                this.submitTypes()
+                this.submitGeneration()
+            },
+
             submitSort() {
                 this.$emit('submit-sort', this.sortParameter)
             },
@@ -123,14 +139,38 @@
         margin-right: 0.25em;
     }
 
-    input, select, #filters > button {
+    input, select {
         margin-right: 1em;
+    }
+
+    #filterDiv {
+        display: flex;
+        flex-direction: row;
     }
 
     @media (max-width: 768px) {
         #filters {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        #filterDiv {
+            flex-direction: column;
+        }
+
+        #resetSort {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: end;
+        }
+
+        #resetSort > button {
+            height: 87%;
+        }
+
+        #sort > button {
+            width: 100%;
+            height: 100%;
         }
 
         #searchBar {
