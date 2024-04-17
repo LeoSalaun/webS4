@@ -1,0 +1,52 @@
+classe Promise :
+
+const myPromise = new Promise (
+	(resolve, reject) => (
+		veryLongTimeFunc();
+		resolve();
+	)
+)
+
+Appel :
+
+myPromise();
+
+myPromise.then(
+	() => (console.log("Done !")) // On récupère généralement des données
+).catch(
+	() => console.log("Failed !"))
+);
+
+
+
+Async/Await :
+
+const myAsyncFunction = async () => (
+	... // very long time operation
+	return "Done";
+);
+
+const myFunction = async () => (
+	const data = await myAsyncFunction();
+	console.log(data); // Done
+);
+
+
+
+Fetch :
+
+fetch("https://www.my-url.com");
+
+fetch("https://www.my-url.com").then((response) => foo(response));
+// OR
+response = await fetch(https://www.my-url.com");
+
+if (response.status == 200) {
+	const data = await response.json();
+} else {
+	new Error(response.statusText);
+}
+
+
+
+Champs props dans le <script> du .vue : ajouter des attributs personnalisés.

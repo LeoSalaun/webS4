@@ -1,23 +1,30 @@
 <template>
     <div id="Header">
         <form action="get" id="filters">
-            <label for="searchBar">Search by Pokemon name: </label> <input v-model="searchName" type="text" name="searchBar" id="searchBar"/> <br/>
-            <label for="type1">First type:</label> <select v-model="searchType1" name="type1" id="type1"></select> <br/>
-            <label for="type2">Second type:</label> <select v-model="searchType2" name="type2" id="type2"></select> <br/>
-            <label for="generation">Generation:</label> <input v-model="searchGeneration" type="number" id="generation" name="generation" min="1" max="9" /> <br/>
-        </form>
-        <button v-on:click="submit">Search</button>
+            <label for="searchBar">Search by Pokemon name: </label> <input v-model="this.searchName" v-on:input="submitName"  type="text" name="searchBar" id="searchBar"/>
 
-        <form action="get" id="searchId">
-            <label for="pokedexId">Pokedex ID:</label> <input v-model="searchID" type="number" id="pokedexId" name="pokedexId" min="1" /> <br/>
-        </form>
-        <button v-on:click="submitId">Find Pokemon with pokedex ID</button>
+            <label for="generation">Generation:</label> <input v-if="this.pokemonGenerations" v-model="this.searchGeneration" v-on:input="submitGeneration" type="number" id="generation" name="generation" min="1" :max="this.pokemonGenerations.length" />
+
+            <label for="type1">First type:</label> <select v-if="this.typeList" v-model="this.searchType1" name="type1" id="type1">
+                <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
+            </select>
+
+            <label for="type2">Second type:</label> <select v-if="this.typeList" v-model="this.searchType2" name="type2" id="type2">
+                <option v-for="pokemonType in this.typeList" :key="pokemonType.name" :value="pokemonType.name">{{ pokemonType.name }}</option>
+            </select>
+
+            <button v-on:click="submitTypes">Get pokemons by types</button> 
+        </form> <br/>
 
         <form action="get" id="sort">
-            <input type="radio" id="pokedexIdSort" name="drone" value="huey" checked />
-            <label for="huey">Huey</label> <br/>
+            <button v-if="this.sortParameter == 'nameSort'" v-on:click="idSort">Sort by pokedex ID</button>
+            <button v-if="this.sortParameter == 'idSort'" v-on:click="nameSort">Sort by pokemon name</button>
+            <!-- <input type="radio" id="idSort" name="sortParameter" value="idSort" v-model="this.sortParameter" v-on:input="submitSort" checked />
+            <label for="idSort">Sort by pokedex ID</label> <br/>
+
+            <input type="radio" id="nameSort" name="sortParameter" value="nameSort" v-model="this.sortParameter" v-on:input="submitSort"/>
+            <label for="nameSort">Sort by name</label> <br/> -->
         </form>
-        <button v-on:click="submitId">Find Pokemon with pokedex ID</button>
     </div>
 </template>
 
@@ -28,34 +35,122 @@
         components: {},
         data() {
             return {
-                searchName: "",
-                searchID: -1,
-                searchType1: "",
-                searchType2: "",
-                searchGeneration: "",
                 pokemonTypes: {},
-                pokemonGenerations: {}
+                pokemonGenerations: {},
+                searchName: "",
+                searchType1: "unknown",
+                searchType2: "unknown",
+                searchGeneration: 0,
+                sortParameter: "idSort"
             }
         },
-        props: {},
+        props: {
+            // searchName: "",
+            // searchType1: "unknown",
+            // searchType2: "unknown",
+            // searchGeneration: 0,
+            // sortParameter: "idSort"
+        },
+        async created() {
+            await this.retrievePokemonTypes()
+            await this.retrievePokemonGenerations()
+        },
+        computed: {
+            typeList() {
+                //console.log(this.pokemonTypes)
+                if (!this.pokemonTypes) return []
+                else return this.pokemonTypes
+            },
+            generationList() {
+                //console.log(this.pokemonGenerations)
+                if (!this.pokemonGenerations) return []
+                else return this.pokemonGenerations
+            }
+        },
         methods: {
-            submit() {
-                this.$emit('submit', {
-                    searchName: this.searchName,
-                    searchType1: this.searchType1,
-                    searchType2: this.searchType2,
-                    searchGeneration: this.searchGeneration
-                })
+            async getPokemonTypes() {
+                const response = await fetch("https://pokeapi.co/api/v2/type")
+                if (response.status == 200) {
+                    const data = await response.json()
+                    return data.results
+                } else {
+                    new Error(response.statusText)
+                }
             },
 
-            submitId() {
-                this.$emit('submit-id', this.searchID)
-}
+            async retrievePokemonTypes() {
+                this.pokemonTypes = await this.getPokemonTypes()
+                //console.log(this.pokemonTypes)
+            },
+            
+            async getPokemonGenerations() {
+                const response = await fetch("https://pokeapi.co/api/v2/generation")
+                if (response.status == 200) {
+                    const data = await response.json()
+                    return data.results
+                } else {
+                    new Error(response.statusText)
+                }
+            },
+
+            async retrievePokemonGenerations() {
+                this.pokemonGenerations = await this.getPokemonGenerations()
+                //console.log(this.pokemonTypes)
+            },
+
+            submitName() {
+                this.$emit('submit-name', this.searchName)
+            },
+
+            submitTypes() {
+                this.$emit('submit-types', [this.searchType1, this.searchType2])
+            },
+
+            submitGeneration() {
+                if (this.pokemonGenerations[this.searchGeneration-1]) this.$emit('submit-generation', this.pokemonGenerations[this.searchGeneration-1].name)
+                else this.$emit('submit-generation', "none")
+            },
+
+            submitSort() {
+                this.$emit('submit-sort', this.sortParameter)
+            },
+
+            idSort() {
+                this.sortParameter = "idSort"
+                this.submitSort()
+            },
+
+            nameSort() {
+                this.sortParameter = "nameSort"
+                this.submitSort()
+            }
         },
-        emits: ['submit', 'submit-id']
+        emits: ['submit-name', 'submit-types', 'submit-generation', 'submit-sort']
     }
 </script>
 
 <style>
+    #filters {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    #filters > label {
+        margin-right: 0.25em;
+    }
 
+    input, select, #filters > button {
+        margin-right: 1em;
+    }
+
+    @media (max-width: 768px) {
+        #filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+        }
+
+        #searchBar {
+            width: 85%;
+        }
+    }
 </style>

@@ -52,14 +52,21 @@ header {
 
 
 <template>
-  <Header v-on:submit="filterPokemons" v-on:submit-id="getPokemonById" />
-  Hello World
-  <PokemonList ref="list"/>
+  <header>
+    <h1>The Pok'I'Dex</h1>
+    <img src="https://sweezy-cursors.com/wp-content/uploads/cursor/pokemon-pokeball-pixel-animated/pokemon-pokeball-pixel-animated-custom-cursor.gif" alt="" width="200px" height="100px">
+    <p>(the 'I' stands for 'IMAC'...)</p>
+  </header>
+  <br/>
+  <PokemonList/>
+  <br/>
+  <footer>
+    <p>Made by Léo SALAUN</p>
+  </footer>
 </template>
 
 <script>
   import Pokemon from "./components/Pokemon.vue"
-  import Header from "./components/Header.vue"
   import PokemonList from "./components/PokemonList.vue"
 
   
@@ -104,44 +111,42 @@ header {
 
   export default {
     name: 'App',
-    components : { Pokemon, Header, PokemonList },
+    components : { Pokemon, PokemonList },
     created() {
       console.log(20);
     },
     data() {
       return {
-        id: pokemonId,
-        sprite: pokemon.sprites.front_default,
-        name: pokemon.name,
-        type1: pokemon.types[0].type.name,
-        type2: pokemonType2,
-        url: "https://pokeapi.co/api/v2/pokemon/1/"
-      }
-    },
-    methods: {
-      filterPokemons(filterData) {
-        let pokemonList = this.$refs.list
-        if (pokemonList) {
-          pokemonList.updateFilterParameters(filterData)
-        }
-        else {
-          console.error('Child component reference is undefined.');
-        }
-      },
-
-      getPokemonById(searchId) {
-        let pokemonList = this.$refs.list
-        if (pokemonList) {
-          pokemonList.getPokemonById(searchId)
-        }
-        else {
-          console.error('Child component reference is undefined.');
-        }
+        searchName: {type: String, default: ""},
+        searchId: {type: Number, default: -1},
+        searchType1: {type: String, default: "null"},
+        searchType2: {type: String, default: "null"},
+        searchGeneration: {type: String, default: "null"},
+        sortParameter: {type: String, default: "null"}
       }
     }
   }
 </script>
 
 <style>
-  
+  #app {
+    margin: 2em;
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  footer {
+    margin-top: 2em;
+  }
+
+  h1 {
+    font-size: 5em;
+    margin-right: 0.25em;
+  }
 </style>

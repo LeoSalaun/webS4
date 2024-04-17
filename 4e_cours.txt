@@ -1,0 +1,17 @@
+
+DOM
+
+Cycle de vie d'un composant :
+
+- Création :
+	beforeCreate => created => beforeMount => mounted
+
+- Mise à jour :
+	beforeUpdate => updated
+
+- Destruction :
+	beforeUnmount => unmounted
+
+
+Un hook = champs dans le composant qui contient une fonction correspondant à chaque étape ci-dessus.
+
